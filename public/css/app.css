@@ -10962,3 +10962,7 @@ a.text-dark:focus {
   }
 }
 
+ul > li {
+  cursor: pointer;
+}
+

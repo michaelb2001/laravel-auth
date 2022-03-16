@@ -15,8 +15,10 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
-            $table->text('description');
+            $table->string('title');
+            $table->text('content');
+            $table->string('img');
+            $table->string('slug');   //lo slug verrà poi utilizzato per recuperare i dati del nostro post specifico 
             $table->timestamps();
         });
     }

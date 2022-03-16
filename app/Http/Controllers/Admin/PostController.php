@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Admin;
 use App\Post;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -15,6 +15,8 @@ class PostController extends Controller
     public function index()
     {
         //
+        $posts = Post::all();
+        return view('admin.posts.index',['posts'=>$posts]);
     }
 
     /**
@@ -36,6 +38,19 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            "title"=>"required|string|max:80|unique:posts",
+            "content"=>"required|string|max:255",
+            "img"=>"url"
+        ]);
+
+        $data=$request->all();
+        
+        $newPost= new Post();   
+        $newPost->fill($data);     
+        $newPost->save();                   
+        return redirect()->route('admin.posts.index');   
+     
     }
 
     /**
@@ -83,5 +98,3 @@ class PostController extends Controller
         //
     }
 }
-
-?>
