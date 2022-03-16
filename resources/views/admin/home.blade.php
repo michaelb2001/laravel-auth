@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -13,10 +14,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    
-                    {{ __('You are logged in!') }}
+                    benvenuto {{Auth::user()->name}}!
+                    {{ __(' You are logged in!') }}
                 </div>
             </div>
+            <button><a href="{{ route('admin.posts.index') }}"> vai ai post </a></button>
         </div>
     </div>
 </div>
