@@ -17,8 +17,8 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('img');
-            $table->string('slug');   //lo slug verrà poi utilizzato per recuperare i dati del nostro post specifico 
+            $table->string('img')->nullable();
+            $table->string('slug')->unique();   //lo slug verrà poi utilizzato per recuperare i dati del nostro post specifico 
             $table->timestamps();
         });
     }

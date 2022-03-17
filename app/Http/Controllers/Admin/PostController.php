@@ -4,9 +4,21 @@ namespace App\Http\Controllers\Admin;
 use App\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+    protected function slug($title = ""){
+        $tmp = Str::slug($title);
+        $count = 1;
+        while(Post::where("slug",$tmp)->first()){
+            $tmp = Str::slug($title)."-".$count;
+            $count++;
+
+        }
+
+        return $tmp;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,6 +39,8 @@ class PostController extends Controller
     public function create()
     {
         //
+        return view('admin.posts.create');
+
     }
 
     /**
@@ -40,12 +54,11 @@ class PostController extends Controller
         //
         $request->validate([
             "title"=>"required|string|max:80|unique:posts",
-            "content"=>"required|string|max:255",
-            "img"=>"url"
+            "content"=>"required|string|max:255"
         ]);
 
         $data=$request->all();
-        
+        $data['slug']=$this->slug($data['title']);
         $newPost= new Post();   
         $newPost->fill($data);     
         $newPost->save();                   
@@ -59,9 +72,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
         //
+        return view('admin.posts.show', compact('post'));
     }
 
     /**
@@ -70,9 +84,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
         //
+        return view('admin.posts.edit', compact('post'));  
     }
 
     /**
@@ -85,6 +100,17 @@ class PostController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            "title"=>"required|string|max:100|",
+            "slug"=>"required|string",
+            "content"=>"required|string|",
+            "img"=>"string|max:255|url",
+        ]);
+       $data = $request->all();
+
+       $post->update($data);
+
+       return redirect()->route('admin.posts.show',$post->id);
     }
 
     /**
@@ -93,8 +119,11 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
         //
+        $post->delete();
+        
+        return redirect()->route('admin.posts.index');
     }
 }
